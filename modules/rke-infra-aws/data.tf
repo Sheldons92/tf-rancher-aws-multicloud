@@ -20,6 +20,13 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet_ids" "available" {
-  vpc_id = data.aws_vpc.default.id
+# data "aws_subnet_ids" "available" {
+#   vpc_id = data.aws_vpc.default.id
+# }
+
+data "aws_subnets" "available" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }

@@ -1,3 +1,10 @@
+locals {
+  cluster_name               = "rancher-ha"
+  kubernetes_version = "v1.22.4-rancher1-1"
+  dind = false
+  cloud_provider = "aws"
+}
+
 module "rke_infra" {
   source = "./modules/rke-infra-aws"
 
@@ -17,13 +24,26 @@ module "rke_infra" {
 
 }
 
-module "rke" {
-  source     = "./modules/rke"
+# module "rke" {
+#   source     = "./modules/rke"
   
+#   rke_nodes  = "${module.rke_infra.rke_nodes}"
+
+#   depends_on = [module.rke_infra]
+
+# }
+
+module "rke_cluster" {
+  source     = "github.com/Sheldons92/tf-module-rke-cluster"
+ 
   rke_nodes  = "${module.rke_infra.rke_nodes}"
 
-  depends_on = [module.rke_infra]
-
+  rke = {
+    cluster_name = local.cluster_name
+    kubernetes_version = local.kubernetes_version
+    dind = local.dind
+    cloud_provider = local.cloud_provider
+       }
 }
 
 # Rancher server Installation
@@ -31,10 +51,10 @@ module "rke" {
   source           = "github.com/belgaied2/tf-module-rancher-server"
   rancher_hostname = var.rancher_hostname
   rancher_k8s = {
-    host                   = module.rke.kubeconfig_api_server_url
-    client_certificate     = module.rke.kubeconfig_client_cert
-    client_key             = module.rke.kubeconfig_client_key
-    cluster_ca_certificate = module.rke.kubeconfig_ca_crt
+    host                   = module.rke_cluster.kubeconfig_api_server_url
+    client_certificate     = module.rke_cluster.kubeconfig_client_cert
+    client_key             = module.rke_cluster.kubeconfig_client_key
+    cluster_ca_certificate = module.rke_cluster.kubeconfig_ca_crt
   }
   rancher_server = {
     ns      = "cattle-system"
@@ -61,7 +81,7 @@ module rancher_bootstrap {
   source = "./modules/rancher_bootstrap"
  
 
-  # depends_on = [module.rancher_server]
+#  depends_on = [module.rancher_server]
 
   rancher_hostname = var.rancher_hostname
   bootstrapPassword = var.bootstrapPassword
@@ -69,16 +89,16 @@ module rancher_bootstrap {
 
 }
 
-module eks {
-  source = "./modules/eks"
-  api_url             = module.rancher_bootstrap.api_url
-  token_key           = module.rancher_bootstrap.token_key
-  aws_access_key = var.aws_access_key
-  aws_secret_key = var.aws_secret_key
-}
+# module eks {
+#   source = "./modules/eks"
+#   api_url             = module.rancher_bootstrap.api_url
+#   token_key           = module.rancher_bootstrap.token_key
+#   aws_access_key = var.aws_access_key
+#   aws_secret_key = var.aws_secret_key
+# }
 
-module gke {
-  source = "./modules/gke"
-  api_url             = module.rancher_bootstrap.api_url
-  token_key           = module.rancher_bootstrap.token_key
-}
+# module gke {
+#   source = "./modules/gke"
+#   api_url             = module.rancher_bootstrap.api_url
+#   token_key           = module.rancher_bootstrap.token_key
+# }

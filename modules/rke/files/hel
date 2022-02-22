@@ -1,8 +1,0 @@
-helm install rancher rancher-latest/rancher \
-  --namespace cattle-system \
-  --set hostname=rancher.ac47de5fbd3144291929ad6eee0985b4-7638a8a0a0f40f50.elb.eu-west-2.amazonaws.com \
-  --set bootstrapPassword=admin
-
-
-
-  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=rancher.sheldons.it/O=rancher.sheldons.it"

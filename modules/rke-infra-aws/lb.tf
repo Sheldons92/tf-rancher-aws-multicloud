@@ -5,7 +5,7 @@ resource "aws_lb" "rancher_lb" {
   name               = "${var.prefix}-rancher-lb"
   internal           = false
   load_balancer_type = "network"
-  subnets            = data.aws_subnet_ids.available.ids
+  subnets            = data.aws_subnets.available.ids
 
   tags = local.tags
 }
