@@ -97,5 +97,6 @@ resource "aws_instance" "node_all" {
     K8sRoles                                 = "controlplane,etcd,worker"
     TFModule                                 = var.prefix
     "kubernetes.io/cluster/${var.clusterid}" = "owned"
+    DoNotDelete = "true"
   }
 }

@@ -77,8 +77,8 @@ module eks {
   aws_secret_key = var.aws_secret_key
 }
 
-module gke {
-  source = "./modules/gke"
-  api_url             = module.rancher_bootstrap.api_url
-  token_key           = module.rancher_bootstrap.token_key
-}
+# module gke {
+#   source = "./modules/gke"
+#   api_url             = module.rancher_bootstrap.api_url
+#   token_key           = module.rancher_bootstrap.token_key
+# }
