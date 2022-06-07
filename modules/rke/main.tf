@@ -2,7 +2,7 @@ resource rke_cluster "cluster" {
   ssh_agent_auth     = true
   cluster_name = "cluster"
 
-  # kubernetes_version = "<K8s_VERSION>"
+   kubernetes_version = "v1.22.4-rancher1-1"
   dynamic "nodes" {
 
     for_each = var.rke_nodes

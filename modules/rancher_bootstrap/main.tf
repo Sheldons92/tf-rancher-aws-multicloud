@@ -2,7 +2,8 @@
 resource "rancher2_bootstrap" "admin" {
   provider   = rancher2.bootstrap
   password   = var.bootstrapPassword
-  initial_password = var.bootstrapPassword
+  # current_password = var.bootstrapPassword
+   initial_password = var.bootstrapPassword
   telemetry  = true
 }
 
@@ -13,6 +14,8 @@ output   token_key {
 output   api_url {
   value =   rancher2_bootstrap.admin.url
 }
+
+
 
 # # Create a new rancher2 Cloud Credential
 # resource "rancher2_cloud_credential" "aws" {

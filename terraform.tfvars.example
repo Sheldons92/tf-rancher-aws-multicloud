@@ -1,0 +1,15 @@
+cluster_name         = "bob-rke-cluster"
+clusterid            = "bob"
+aws_prefix           = "bob"
+aws_access_key       = "XXXXXXXXXXXXX"
+aws_secret_key       = "XXXXXXXXXXXXX"
+aws_region           = "eu-west-2"
+node_all_count       = 3
+node_master_count    = 0
+node_worker_count    = 0
+route53_name         =   "*.bob"
+route53_zone         =   "ps.rancher.space"
+deploy_lb            =   "true"
+bootstrapPassword    =   "password12345678"
+rancher_hostname     =   "rancher.bob.ps.rancher.space"
+rancher_version = "2.6.5"

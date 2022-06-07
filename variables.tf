@@ -11,7 +11,7 @@ variable kubernetes_version {
 }
 
 variable rancher_version {
-  default = "2.6.3"
+  default = "2.6.4"
 }
 
 variable aws_access_key {

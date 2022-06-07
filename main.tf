@@ -1,3 +1,13 @@
+terraform {
+  cloud {
+    organization = "Sheldonsit"
+
+    workspaces {
+      name = "rancher"
+    }
+  }
+}
+
 module "rke_infra" {
   source = "./modules/rke-infra-aws"
 
@@ -26,9 +36,12 @@ module "rke" {
 
 }
 
-# Rancher server Installation
+# # Rancher server Installation
   module "rancher_server" {
-  source           = "github.com/belgaied2/tf-module-rancher-server"
+  # source           = "github.com/belgaied2/tf-module-rancher-server"
+  source = "./modules/rancher-server"
+  # depends_on = [module.rke]
+
   rancher_hostname = var.rancher_hostname
   rancher_k8s = {
     host                   = module.rke.kubeconfig_api_server_url
@@ -39,7 +52,7 @@ module "rke" {
   rancher_server = {
     ns      = "cattle-system"
     version = var.rancher_version
-    branch  = "stable"
+    branch  = "latest"
     chart_set = [
       {
         name  = "ingress.tls.source"
@@ -59,9 +72,12 @@ module "rke" {
 
 module rancher_bootstrap {
   source = "./modules/rancher_bootstrap"
- 
+  providers = {
+  rancher2.bootstrap = rancher2.bootstrap
+  rancher2.admin = rancher2.admin
+}
 
-  # depends_on = [module.rancher_server]
+  depends_on = [module.rancher_server]
 
   rancher_hostname = var.rancher_hostname
   bootstrapPassword = var.bootstrapPassword
@@ -71,11 +87,27 @@ module rancher_bootstrap {
 
 module eks {
   source = "./modules/eks"
+  # depends_on = [module.rancher_bootstrap ]
+#   providers = {
+#   rancher2.admin = rancher2.admin
+# }
   api_url             = module.rancher_bootstrap.api_url
   token_key           = module.rancher_bootstrap.token_key
   aws_access_key = var.aws_access_key
   aws_secret_key = var.aws_secret_key
 }
+
+# module ec2 {
+#   source = "./modules/ec2"
+#   # depends_on = [module.rancher_bootstrap ]
+# #   providers = {
+# #   rancher2.admin = rancher2.admin
+# # }
+#   api_url             = module.rancher_bootstrap.api_url
+#   token_key           = module.rancher_bootstrap.token_key
+#   aws_access_key = var.aws_access_key
+#   aws_secret_key = var.aws_secret_key
+# }
 
 # module gke {
 #   source = "./modules/gke"
