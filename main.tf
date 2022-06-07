@@ -85,17 +85,17 @@ module rancher_bootstrap {
 
 }
 
-module eks {
-  source = "./modules/eks"
-  # depends_on = [module.rancher_bootstrap ]
-#   providers = {
-#   rancher2.admin = rancher2.admin
+# module eks {
+#   source = "./modules/eks"
+#   # depends_on = [module.rancher_bootstrap ]
+# #   providers = {
+# #   rancher2.admin = rancher2.admin
+# # }
+#   api_url             = module.rancher_bootstrap.api_url
+#   token_key           = module.rancher_bootstrap.token_key
+#   aws_access_key = var.aws_access_key
+#   aws_secret_key = var.aws_secret_key
 # }
-  api_url             = module.rancher_bootstrap.api_url
-  token_key           = module.rancher_bootstrap.token_key
-  aws_access_key = var.aws_access_key
-  aws_secret_key = var.aws_secret_key
-}
 
 # module ec2 {
 #   source = "./modules/ec2"
